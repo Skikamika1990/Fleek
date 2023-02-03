@@ -26,38 +26,3 @@ DOCKER_BUILDKIT=1 docker build -t ursa:latest .
 docker run -d -p 4069:4069 -p 6009:6009 -v $HOME/.ursa/:/root/.ursa/:rw --name ursa-cli -it ursa
 
 source $HOME/.cargo/env
-
-
-
-cd $HOME
-
-git clone https://github.com/fleek-network/ursa.git && cd ursa make install
-
-cd /etc/systemd/system
-[Unit]
-Description=My_Fleek
-
-tee <<EOF /etc/systemd/system/fleek.service
-
-[Unit]
-Description=My_Fleek
-After=network.target
-
-[Service]
-User=$Skika
-ExecStart=/root/.cargo/bin/ursa
-WorkingDirectory=$HOME/ursa
-Restart=on-failure
-RestartSec=10
-LimitNOFILE=65535
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sleep 10
-
-systemctl daemon-reload
-systemctl enable fleek
-systemctl restart fleek
-echo "Good"
